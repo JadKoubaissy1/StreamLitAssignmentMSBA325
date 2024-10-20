@@ -2,12 +2,11 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-
 # Set the title of the app
 st.title("Waste Transfer Data Visualizations")
 
 # Load the dataset
-file_path = 'C:/Users/User/Desktop/WasteByRegion.csv'
+file_path = 'C:/Users/User/Desktop/MSBA325 Assignment 2/WasteByRegion.csv'
 df = pd.read_csv(file_path)
 
 # Rename columns for clarity
