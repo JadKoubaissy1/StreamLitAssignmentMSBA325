@@ -6,7 +6,7 @@ import plotly.express as px
 st.title("Waste Transfer Data Visualizations")
 
 # Load the dataset
-file_path = 'C:/Users/User/Desktop/MSBA325 Assignment 2/WasteByRegion.csv'
+file_path = r'C:\Users\User\Desktop\MSBA325 Assignment 2\WasteByRegion.csv'
 df = pd.read_csv(file_path)
 
 # Rename columns for clarity
@@ -110,4 +110,4 @@ elif option == "Pie Chart":
         title='Proportion of Waste Transfer Types (Overall)',
         height=600
     )
-    st.plotly_chart(fig)
+    st.plotly
