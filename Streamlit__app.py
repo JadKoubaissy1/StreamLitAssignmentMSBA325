@@ -124,7 +124,7 @@ elif option == "Pie Chart":
     )
     st.plotly_chart(fig)
 
-# Treemap
+# Treemap with separate colors for each region
 elif option == "Treemap":
     df_melted = df.melt(id_vars=['Region_Category'], 
                         value_vars=waste_columns, 
@@ -140,7 +140,14 @@ elif option == "Treemap":
             path=['Region_Category', 'Waste Transfer Type'], 
             values='Count', 
             title='Waste Transfer Distribution by Region and Type',
-            color='Count',
+            color='Region_Category',  # Color by region
+            color_discrete_map={
+                'Beirut': 'rgb(255, 105, 97)',   # Red-ish
+                'North': 'rgb(97, 204, 255)',   # Blue-ish
+                'South': 'rgb(255, 179, 71)',   # Orange-ish
+                'East': 'rgb(144, 238, 144)',  # Green-ish
+                'West': 'rgb(238, 130, 238)'   # Purple-ish
+            },
             hover_data={'Count': True}
         )
         fig.update_traces(texttemplate="%{label}<br>%{value}", textinfo="label+value")
