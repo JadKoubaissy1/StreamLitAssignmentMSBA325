@@ -124,22 +124,19 @@ elif option == "Pie Chart":
     )
     st.plotly_chart(fig)
 
-# Line Chart
+# Simplified Line Chart
 elif option == "Line Chart":
-    df_melted = df.melt(id_vars=['refPeriod', 'Region_Category'], 
+    df_melted = df.melt(id_vars=['refPeriod'], 
                         value_vars=waste_columns, 
                         var_name='Waste Transfer Type', 
                         value_name='Count')
 
-    selected_region = st.sidebar.selectbox("Select Region", df['Region_Category'].unique())
-    filtered_df = df_melted[df_melted['Region_Category'] == selected_region]
-
     fig = px.line(
-        filtered_df, 
+        df_melted, 
         x='refPeriod', 
         y='Count', 
         color='Waste Transfer Type', 
-        title=f'Waste Transfer Trend in {selected_region}',
+        title='Overall Waste Transfer Trend Over Time',
         markers=True
     )
     st.plotly_chart(fig)
@@ -151,14 +148,20 @@ elif option == "Treemap":
                         var_name='Waste Transfer Type', 
                         value_name='Count')
 
-    fig = px.treemap(
-        df_melted, 
-        path=['Region_Category', 'Waste Transfer Type'], 
-        values='Count', 
-        title='Waste Transfer Distribution by Region and Type',
-        color='Count',
-        color_continuous_scale='YlOrRd',  # Warmer color scale
-        hover_data={'Count': True}
-    )
-    fig.update_traces(texttemplate="%{label}<br>%{value}", textinfo="label+value")
-    st.plotly_chart(fig)
+    # Filter out zero values
+    df_melted = df_melted[df_melted['Count'] > 0]
+
+    if not df_melted.empty:
+        fig = px.treemap(
+            df_melted, 
+            path=['Region_Category', 'Waste Transfer Type'], 
+            values='Count', 
+            title='Waste Transfer Distribution by Region and Type',
+            color='Count',
+            color_continuous_scale='YlOrRd',  # Warmer color scale
+            hover_data={'Count': True}
+        )
+        fig.update_traces(texttemplate="%{label}<br>%{value}", textinfo="label+value")
+        st.plotly_chart(fig)
+    else:
+        st.warning("No data available for the treemap.")
