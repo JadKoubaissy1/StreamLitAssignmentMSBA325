@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -5,9 +6,15 @@ import plotly.express as px
 # Set the title of the app
 st.title("Waste Transfer Data Visualizations")
 
+# Use a relative file path for the dataset
+file_path = 'WasteByRegion.csv'  # Ensure the CSV file is in the same directory or adjust the path accordingly
+
 # Load the dataset
-file_path = r'C:\Users\User\Desktop\MSBA325 Assignment 2\WasteByRegion.csv'
-df = pd.read_csv(file_path)
+if os.path.exists(file_path):
+    df = pd.read_csv(file_path)
+else:
+    st.error(f"File not found: {file_path}. Please ensure the file is in the correct location.")
+    st.stop()
 
 # Rename columns for clarity
 df.rename(columns={
@@ -110,4 +117,4 @@ elif option == "Pie Chart":
         title='Proportion of Waste Transfer Types (Overall)',
         height=600
     )
-    st.plotly
+    st.plotly_chart(fig)
