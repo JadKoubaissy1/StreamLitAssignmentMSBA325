@@ -60,7 +60,7 @@ waste_columns = [
 st.sidebar.title("Choose Visualization")
 option = st.sidebar.radio(
     "Select a visualization type:",
-    ("Bar Chart", "Bubble Map", "Pie Chart", "Line Chart", "Treemap")
+    ("Bar Chart", "Bubble Map", "Pie Chart", "Treemap")
 )
 
 # Bar Chart
@@ -124,24 +124,7 @@ elif option == "Pie Chart":
     )
     st.plotly_chart(fig)
 
-# Simplified Line Chart
-elif option == "Line Chart":
-    df_melted = df.melt(id_vars=['refPeriod'], 
-                        value_vars=waste_columns, 
-                        var_name='Waste Transfer Type', 
-                        value_name='Count')
-
-    fig = px.line(
-        df_melted, 
-        x='refPeriod', 
-        y='Count', 
-        color='Waste Transfer Type', 
-        title='Overall Waste Transfer Trend Over Time',
-        markers=True
-    )
-    st.plotly_chart(fig)
-
-# Treemap with Warmer Colors and Number Labels
+# Treemap
 elif option == "Treemap":
     df_melted = df.melt(id_vars=['Region_Category'], 
                         value_vars=waste_columns, 
@@ -158,7 +141,6 @@ elif option == "Treemap":
             values='Count', 
             title='Waste Transfer Distribution by Region and Type',
             color='Count',
-            color_continuous_scale='YlOrRd',  # Warmer color scale
             hover_data={'Count': True}
         )
         fig.update_traces(texttemplate="%{label}<br>%{value}", textinfo="label+value")
