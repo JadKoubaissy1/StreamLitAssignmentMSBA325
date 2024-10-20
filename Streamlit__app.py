@@ -2,6 +2,7 @@ import os
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import numpy as np
 
 # Set the title of the app
 st.title("Waste Transfer Data Visualizations")
@@ -24,6 +25,10 @@ df.rename(columns={
     'Waste transfer destination - external dumpsite': 'Waste destination: external dumpsite',
     'Waste transfer destination - sanitary landfill': 'Waste destination: sanitary landfill'
 }, inplace=True)
+
+# Add a mock 'refPeriod' column for testing
+if 'refPeriod' not in df.columns:
+    df['refPeriod'] = np.random.choice(pd.date_range(start='2021-01-01', periods=12, freq='M'), size=len(df))
 
 # Function to categorize regions
 def categorize_region(area):
@@ -119,7 +124,7 @@ elif option == "Pie Chart":
     )
     st.plotly_chart(fig)
 
-# Interactive Line Chart
+# Line Chart
 elif option == "Line Chart":
     df_melted = df.melt(id_vars=['refPeriod', 'Region_Category'], 
                         value_vars=waste_columns, 
@@ -139,7 +144,7 @@ elif option == "Line Chart":
     )
     st.plotly_chart(fig)
 
-# Interactive Treemap
+# Treemap with Warmer Colors and Number Labels
 elif option == "Treemap":
     df_melted = df.melt(id_vars=['Region_Category'], 
                         value_vars=waste_columns, 
@@ -150,6 +155,10 @@ elif option == "Treemap":
         df_melted, 
         path=['Region_Category', 'Waste Transfer Type'], 
         values='Count', 
-        title='Waste Transfer Distribution by Region and Type'
+        title='Waste Transfer Distribution by Region and Type',
+        color='Count',
+        color_continuous_scale='YlOrRd',  # Warmer color scale
+        hover_data={'Count': True}
     )
+    fig.update_traces(texttemplate="%{label}<br>%{value}", textinfo="label+value")
     st.plotly_chart(fig)
